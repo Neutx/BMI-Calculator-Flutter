@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './icon_content.dart';
@@ -16,6 +18,9 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   Gender selectedGender;
+  int height = 180;
+  int weight = 50;
+  int age = 17;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,7 @@ class _InputPageState extends State<InputPage> {
         title: Center(child: Text('BMI CALCULATOR')),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
               child: Row(
@@ -38,8 +44,8 @@ class _InputPageState extends State<InputPage> {
                   );
                 },
                 colour: selectedGender == Gender.male
-                    ? activeCardColor
-                    : inactiveCardColor,
+                    ? kActiveCardColor
+                    : kInactiveCardColor,
                 cardChild: IconContent(
                   icon: FontAwesomeIcons.mars,
                   label: 'MALE',
@@ -55,8 +61,8 @@ class _InputPageState extends State<InputPage> {
                   );
                 },
                 colour: selectedGender == Gender.female
-                    ? activeCardColor
-                    : inactiveCardColor,
+                    ? kActiveCardColor
+                    : kInactiveCardColor,
                 cardChild: IconContent(
                   icon: FontAwesomeIcons.venus,
                   label: 'FEMALE',
@@ -66,9 +72,51 @@ class _InputPageState extends State<InputPage> {
           )),
           Expanded(
             child: Reusable_card(
-              colour: activeCardColor,
+              colour: kActiveCardColor,
               cardChild: Column(
-                children: [Text('HEIGHT')],
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'HEIGHT',
+                    style: kLabelTextStyle,
+                  ),
+                  Row(
+                      textBaseline: TextBaseline.alphabetic,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      children: <Widget>[
+                        Text(
+                          height.toString(),
+                          style: kNumberTextStyle,
+                        ),
+                        Text(
+                          'cm',
+                          style: kLabelTextStyle,
+                        )
+                      ]),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                        inactiveTrackColor: Color(0xff8d8e98),
+                        activeTrackColor: Colors.white,
+                        thumbColor: Color(0xffEB1555),
+                        overlayColor: Color(0x29EB1555),
+                        thumbShape: RoundSliderThumbShape(
+                          enabledThumbRadius: 15,
+                        ),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 30)),
+                    child: Slider(
+                      value: height.toDouble(),
+                      min: 120.0,
+                      max: 220.0,
+                      onChanged: (double newValue) {
+                        setState(() {
+                          height = newValue.round();
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -76,10 +124,82 @@ class _InputPageState extends State<InputPage> {
               child: Row(
             children: [
               Expanded(
-                child: Reusable_card(colour: activeCardColor),
+                child: Reusable_card(
+                  colour: kActiveCardColor,
+                  cardChild: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'WEIGHT',
+                        style: kLabelTextStyle,
+                      ),
+                      Text(weight.toString(), style: kNumberTextStyle),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RoundIconButton(
+                            icon: FontAwesomeIcons.add,
+                            onPressed: () {
+                              setState(() {
+                                weight++;
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RoundIconButton(
+                            icon: FontAwesomeIcons.minus,
+                            onPressed: () {
+                              setState(() {
+                                weight--;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
               Expanded(
-                child: Reusable_card(colour: activeCardColor),
+                child: Reusable_card(
+                  colour: kActiveCardColor,
+                  cardChild: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'AGE',
+                        style: kLabelTextStyle,
+                      ),
+                      Text(age.toString(), style: kNumberTextStyle),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RoundIconButton(
+                            icon: FontAwesomeIcons.add,
+                            onPressed: () {
+                              setState(() {
+                                age++;
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RoundIconButton(
+                            icon: FontAwesomeIcons.minus,
+                            onPressed: () {
+                              setState(() {
+                                age--;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           )),
@@ -87,10 +207,32 @@ class _InputPageState extends State<InputPage> {
             color: Color(0xffeb1555),
             margin: EdgeInsets.only(top: 10),
             width: double.infinity,
-            height: bottomContainerHeight,
+            height: kBContainerHeight,
           ),
         ],
       ),
+    );
+  }
+}
+
+class RoundIconButton extends StatelessWidget {
+  final IconData icon;
+  final Function onPressed;
+
+  RoundIconButton({@required this.icon, @required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child: Icon(icon),
+      onPressed: onPressed,
+      elevation: 0,
+      constraints: BoxConstraints.tightFor(
+        width: 56.0,
+        height: 56.0,
+      ),
+      shape: CircleBorder(),
+      fillColor: Color(0xff4c4e5f),
     );
   }
 }
